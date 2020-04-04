@@ -3,7 +3,11 @@ RSpec.describe Paidy do
     expect(Paidy::VERSION).not_to be nil
   end
 
-  it "does something useful" do
-    expect(false).to eq(true)
+  describe "Object#request" do
+    context "do not set secret_key" do
+      it "raise AuthenticationError" do
+        expect{ Paidy.request(:post, '/', {}, {}) }.to raise_error(Paidy::AuthenticationError)
+      end
+    end
   end
 end

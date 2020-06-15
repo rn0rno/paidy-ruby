@@ -65,9 +65,9 @@ module Paidy
   def self.query_parameter(params)
     params.map do |k, v|
       if v.is_a?(Array)
-        v.map{ |vv| "#{k}[]=#{CGI.encode(vv)}" }.join('&')
+        v.map{ |vv| "#{k}[]=#{CGI.escape(vv)}" }.join('&')
       else
-        "#{k}=#{CGI.encode(v)}"
+        "#{k}=#{CGI.escape(v)}"
       end
     end.join('&')
   end

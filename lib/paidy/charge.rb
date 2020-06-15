@@ -6,6 +6,13 @@ module Paidy
 
         self.new(res['id'])
       end
+
+      def retrieve(id)
+        instance = self.new(id)
+        instance.refresh
+
+        instance
+      end
     end
 
     def initialize(id)
@@ -39,6 +46,14 @@ module Paidy
         close
       else
         refund
+      end
+    end
+
+    def refresh
+      res = Paidy.request(:get, "payments/#{id}")
+
+      if res['status'] == 'closed' && res['captures'].present?
+        @capture_id = res['captures'][0]['id']
       end
     end
 

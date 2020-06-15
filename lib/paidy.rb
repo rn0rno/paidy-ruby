@@ -33,19 +33,21 @@ module Paidy
     uri = api_uri(path: path)
 
     case method.to_s.downcase.to_sym
-    # when :get
-    #   uri += (URI.parse(uri).query.present? ? '&' : '?') + query_parameter(params)
+    when :get
+      uri += (uri.query.present? ? '&' : '?') + query_parameter(params) if params.present?
+      req = Net::HTTP::Get.new(uri)
     when :post
       req = Net::HTTP::Post.new(uri)
-      req['Content-Type'] = 'application/json'
-      req['Paidy-Version'] = @api_version
-      req['Authorization'] = "Bearer #{secret_key}"
       req.body = params.to_json
-
-      req_options = {
-        use_ssl: @use_ssl,
-      }
     end
+
+    req['Content-Type'] = 'application/json'
+    req['Paidy-Version'] = @api_version
+    req['Authorization'] = "Bearer #{secret_key}"
+
+    req_options = {
+      use_ssl: @use_ssl,
+    }
 
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
       http.request(req)

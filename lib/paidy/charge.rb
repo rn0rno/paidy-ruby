@@ -20,7 +20,7 @@ module Paidy
       @capture_id = nil
     end
 
-    attr_reader :id, :capture_id, :status
+    attr_reader :id, :capture_id
 
     def capture
       res = Paidy.request(:post, "#{base_path}/captures", {}, {})

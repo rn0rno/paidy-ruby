@@ -36,7 +36,11 @@ module Paidy
     end
 
     def refund(amount: nil, refund_reason: nil)
-      res = Paidy.request(:post, "#{base_path}/refunds", { capture_id: capture_id, amount: amount, reason: refund_reason }, {})
+      params = { capture_id: capture_id }
+      params[:amount] = amount if amount.present?
+      params[:reason] = refund_reason if refund_reason.present?
+
+      res = Paidy.request(:post, "#{base_path}/refunds", params, {})
 
       self
     end

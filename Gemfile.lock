@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    paidy (0.0.3)
+    paidy (0.0.4)
 
 GEM
   remote: https://rubygems.org/

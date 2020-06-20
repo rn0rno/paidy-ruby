@@ -20,7 +20,7 @@ module Paidy
       @capture_id = nil
     end
 
-    attr_reader :id, :capture_id, :status
+    attr_reader :id, :capture_id
 
     def capture
       res = Paidy.request(:post, "#{base_path}/captures", {}, {})
@@ -35,17 +35,21 @@ module Paidy
       self
     end
 
-    def refund
-      res = Paidy.request(:post, "#{base_path}/refund", { capture_id: capture_id }, {})
+    def refund(amount: nil, refund_reason: nil)
+      params = { capture_id: capture_id }
+      params[:amount] = amount if amount.present?
+      params[:reason] = refund_reason if refund_reason.present?
+
+      res = Paidy.request(:post, "#{base_path}/refunds", params, {})
 
       self
     end
 
-    def refund_or_close
+    def refund_or_close(amount: nil, refund_reason: nil)
       if capture_id.nil?
         close
       else
-        refund
+        refund(amount: amount, refund_reason: refund_reason)
       end
     end
 

@@ -35,17 +35,17 @@ module Paidy
       self
     end
 
-    def refund
-      res = Paidy.request(:post, "#{base_path}/refund", { capture_id: capture_id }, {})
+    def refund(amount: nil, refund_reason: nil)
+      res = Paidy.request(:post, "#{base_path}/refunds", { capture_id: capture_id, amount: amount, reason: refund_reason }, {})
 
       self
     end
 
-    def refund_or_close
+    def refund_or_close(amount: nil, refund_reason: nil)
       if capture_id.nil?
         close
       else
-        refund
+        refund(amount: amount, refund_reason: refund_reason)
       end
     end
 

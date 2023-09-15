@@ -18,9 +18,10 @@ module Paidy
     def initialize(id)
       @id = id
       @capture_id = nil
+      @amount = nil
     end
 
-    attr_reader :id, :capture_id
+    attr_reader :id, :capture_id, :amount
 
     def capture
       res = Paidy.request(:post, "#{base_path}/captures", {}, {})
@@ -55,6 +56,8 @@ module Paidy
 
     def refresh
       res = Paidy.request(:get, "payments/#{id}")
+
+      @amount = res['amount']
 
       if res['status'] == 'closed' && res['captures'].present?
         @capture_id = res['captures'][0]['id']
